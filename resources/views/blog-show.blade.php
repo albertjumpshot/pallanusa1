@@ -17,9 +17,22 @@
     <!-- Article Content -->
     <section class="py-16 bg-white">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            @if($article->image)
+                <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" class="w-full h-96 object-cover rounded-lg mb-8 shadow-lg">
+            @endif
             <article class="prose prose-lg max-w-none">
                 {!! nl2br(e($article->content)) !!}
             </article>
+
+            <!-- Source Link -->
+            @if($article->url)
+                <div class="mt-8 p-4 bg-blue-50 border-l-4 border-blue-500 rounded">
+                    <p class="text-sm text-gray-700 mb-2">📚 <strong>Sumber Artikel:</strong></p>
+                    <a href="{{ $article->url }}" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-800 hover:underline break-all">
+                        {{ $article->url }}
+                    </a>
+                </div>
+            @endif
 
             <!-- Back to Blog -->
             <div class="mt-12 pt-8 border-t border-gray-200">
@@ -62,11 +75,7 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="bg-dark text-white py-16">
-        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl font-serif font-bold mb-4">Butuh Konsultasi Lebih Lanjut?</h2>
-            <p class="text-gray-300 mb-8">Hubungi tim kami untuk mendapatkan solusi hukum yang sesuai dengan kebutuhan Anda</p>
-            <a href="{{ route('contact') }}" class="bg-gold text-dark px-8 py-3 rounded-lg font-semibold hover:bg-yellow-500 transition duration-300 inline-block">Hubungi Kami</a>
-        </div>
-    </section>
+    @include('components.cta')
+
+
 </x-app-layout>

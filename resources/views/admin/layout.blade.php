@@ -38,19 +38,23 @@
             <nav class="flex-1 px-4 py-6 space-y-2">
                 <a href="{{ route('admin.dashboard') }}" 
                    class="block px-4 py-3 rounded {{ request()->routeIs('admin.dashboard') ? 'bg-gold text-dark font-semibold' : 'text-gray-300 hover:bg-gray-800' }} transition">
-                    📊 Dashboard
+                    Dashboard
                 </a>
                 <a href="{{ route('admin.articles.index') }}" 
                    class="block px-4 py-3 rounded {{ request()->routeIs('admin.articles.*') ? 'bg-gold text-dark font-semibold' : 'text-gray-300 hover:bg-gray-800' }} transition">
-                    📝 Artikel
+                    Artikel
                 </a>
                 <a href="{{ route('admin.lawyers.index') }}" 
                    class="block px-4 py-3 rounded {{ request()->routeIs('admin.lawyers.*') ? 'bg-gold text-dark font-semibold' : 'text-gray-300 hover:bg-gray-800' }} transition">
-                    👨‍⚖️ Pengacara
+                    Pengacara
                 </a>
                 <a href="{{ route('admin.services.index') }}" 
                    class="block px-4 py-3 rounded {{ request()->routeIs('admin.services.*') ? 'bg-gold text-dark font-semibold' : 'text-gray-300 hover:bg-gray-800' }} transition">
-                    ⚖️ Layanan
+                    Layanan
+                </a>
+                <a href="{{ route('admin.contacts.index') }}" 
+                   class="block px-4 py-3 rounded {{ request()->routeIs('admin.contacts.*') ? 'bg-gold text-dark font-semibold' : 'text-gray-300 hover:bg-gray-800' }} transition">
+                    Pesan Kontak
                 </a>
             </nav>
 
@@ -63,7 +67,7 @@
                 <form action="{{ route('admin.logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="w-full px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition font-semibold">
-                        🚪 Logout
+                        Logout
                     </button>
                 </form>
             </div>

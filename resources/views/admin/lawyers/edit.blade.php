@@ -6,7 +6,7 @@
 @section('content')
     <div class="max-w-2xl mx-auto">
         <div class="bg-white rounded-lg shadow-md p-8">
-            <form action="{{ route('admin.lawyers.update', $lawyer) }}" method="POST" class="space-y-6">
+            <form action="{{ route('admin.lawyers.update', $lawyer) }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 @method('PUT')
 
@@ -39,10 +39,16 @@
                 </div>
 
                 <div>
-                    <label for="photo" class="block text-sm font-semibold text-dark mb-2">URL Foto (Opsional)</label>
-                    <input type="text" id="photo" name="photo" value="{{ old('photo', $lawyer->photo) }}"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold focus:ring-opacity-20"
-                           placeholder="https://...">
+                    <label for="photo" class="block text-sm font-semibold text-dark mb-2">Foto Pengacara</label>
+                    @if($lawyer->photo)
+                        <div class="mb-3">
+                            <img src="{{ asset('storage/' . $lawyer->photo) }}" alt="{{ $lawyer->name }}" class="h-40 rounded-lg object-cover">
+                            <p class="text-gray-600 text-sm mt-2">Foto saat ini</p>
+                        </div>
+                    @endif
+                    <input type="file" id="photo" name="photo" accept="image/*"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold focus:ring-opacity-20">
+                    <p class="text-gray-500 text-sm mt-1">Format: JPEG, PNG, JPG, GIF. Maksimal 2MB. Biarkan kosong jika tidak ingin mengubah foto.</p>
                 </div>
 
                 <div class="flex space-x-3 pt-4">

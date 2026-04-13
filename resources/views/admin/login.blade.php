@@ -90,7 +90,7 @@
 
         <!-- Security Info -->
         <div class="mt-8 text-center text-gray-400 text-sm">
-            <p>🔒 Login Anda dijamin aman dan terenkripsi</p>
+            <p>Login Anda dijamin aman dan terenkripsi</p>
         </div>
     </div>
 </body>

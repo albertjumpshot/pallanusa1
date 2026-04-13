@@ -111,15 +111,9 @@
     </section>
 
     <!-- CTA Section -->
-    <section class="py-16 bg-dark text-white">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl font-serif font-bold mb-4">Butuh Konsultasi Hukum Lebih Lanjut?</h2>
-            <p class="text-gray-300 mb-8">Tim advokat profesional kami siap membantu Anda dengan kasus hukum apa pun</p>
-            <a href="{{ route('contact') }}" class="bg-gold text-dark px-8 py-3 rounded-lg font-semibold hover:bg-yellow-500 transition duration-300">
-                Hubungi Kami Sekarang
-            </a>
-        </div>
-    </section>
+    @include('components.cta')
+
+
 </x-app-layout>
 
 <script>

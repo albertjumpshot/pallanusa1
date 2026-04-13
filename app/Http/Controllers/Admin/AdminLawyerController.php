@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Lawyer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class AdminLawyerController extends Controller
 {
@@ -35,8 +36,12 @@ class AdminLawyerController extends Controller
             'specialization' => 'required|string|max:255',
             'education' => 'required|string',
             'experience' => 'required|string',
-            'photo' => 'nullable|string|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        if ($request->hasFile('photo')) {
+            $validated['photo'] = $request->file('photo')->store('lawyers', 'public');
+        }
 
         Lawyer::create($validated);
 
@@ -62,8 +67,15 @@ class AdminLawyerController extends Controller
             'specialization' => 'required|string|max:255',
             'education' => 'required|string',
             'experience' => 'required|string',
-            'photo' => 'nullable|string|max:255',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        if ($request->hasFile('photo')) {
+            if ($lawyer->photo) {
+                Storage::disk('public')->delete($lawyer->photo);
+            }
+            $validated['photo'] = $request->file('photo')->store('lawyers', 'public');
+        }
 
         $lawyer->update($validated);
 
@@ -76,6 +88,9 @@ class AdminLawyerController extends Controller
      */
     public function destroy(Lawyer $lawyer)
     {
+        if ($lawyer->photo) {
+            Storage::disk('public')->delete($lawyer->photo);
+        }
         $lawyer->delete();
         return redirect()->route('admin.lawyers.index')
             ->with('success', 'Pengacara berhasil dihapus.');

@@ -193,6 +193,18 @@ class ChatbotController extends Controller
         ]
     ];
 
+    // Stopwords bahasa Indonesia
+    private $stopwords = [
+        'yang', 'dan', 'di', 'ke', 'dari', 'dengan', 'untuk', 'ini', 'itu', 'adalah',
+        'pada', 'dalam', 'oleh', 'atau', 'juga', 'tidak', 'ada', 'saya', 'kami', 'kita',
+        'anda', 'mereka', 'dia', 'ia', 'lah', 'pun', 'paling', 'lebih', 'sangat',
+        'sudah', 'akan', 'bisa', 'dapat', 'telah', 'karena', 'jika', 'maka', 'namun',
+        'tetapi', 'bahwa', 'atas', 'bawah', 'sesuatu', 'suatu', 'barang', 'orang',
+        'siapa', 'mana', 'bagaimana', 'kapan', 'dimana', 'mengapa', 'apakah', 'apa',
+        'serta', 'secara', 'setiap', 'semua', 'para', 'hal', 'tersebut', 'antara',
+        'setelah', 'sebelum', 'saat', 'ketika', 'selama', 'hingga', 'sampai'
+    ];
+
     public function index()
     {
         return view('chatbot');
@@ -201,7 +213,55 @@ class ChatbotController extends Controller
     public function search(Request $request)
     {
         $query = $request->input('query');
-        $results = $this->searchPasal($query);
+
+        // Bangun corpus: setiap dokumen = gabungan teks dari satu pasal
+        $corpus = [];
+        foreach ($this->kuhpData as $index => $pasal) {
+            $corpus[$index] = $pasal['judul'] . ' ' .
+                              $pasal['isi_pasal'] . ' ' .
+                              str_replace(',', ' ', $pasal['kata_kunci']) . ' ' .
+                              $pasal['kategori'];
+        }
+
+        // Tambahkan query sebagai dokumen terakhir di corpus
+        $queryIndex = count($corpus);
+        $corpus[$queryIndex] = $query;
+
+        // Preprocess semua dokumen
+        $processedCorpus = [];
+        foreach ($corpus as $idx => $doc) {
+            $processedCorpus[$idx] = $this->preprocess($doc);
+        }
+
+        // Hitung TF-IDF untuk seluruh corpus
+        $tfidfMatrix = $this->buildTFIDF($processedCorpus);
+
+        // Hitung Cosine Similarity antara query dan setiap dokumen pasal
+        $queryVector = $tfidfMatrix[$queryIndex] ?? [];
+        $similarities = [];
+
+        foreach ($this->kuhpData as $index => $pasal) {
+            $docVector = $tfidfMatrix[$index] ?? [];
+            $similarity = $this->cosineSimilarity($queryVector, $docVector);
+
+            if ($similarity > 0.05) {
+                $similarities[$index] = $similarity;
+            }
+        }
+
+        // Urutkan dari similarity tertinggi
+        arsort($similarities);
+
+        // Ambil top 3
+        $topResults = array_slice($similarities, 0, 3, true);
+
+        // Format hasil
+        $results = [];
+        foreach ($topResults as $index => $similarity) {
+            $results[] = array_merge($this->kuhpData[$index], [
+                'similarity_score' => round($similarity * 100, 2)
+            ]);
+        }
 
         return response()->json([
             'results' => $results,
@@ -209,64 +269,144 @@ class ChatbotController extends Controller
         ]);
     }
 
-    private function normalizeText($text)
+    /**
+     * STEP 1 - PREPROCESSING
+     * Lowercase → hapus tanda baca → tokenisasi → stopword removal → stemming
+     */
+    private function preprocess($text)
     {
+        // Lowercase
         $text = strtolower($text);
-        $text = preg_replace('/[^a-z0-9\s]/', ' ', $text);
-        return $text;
+
+        // Hapus tanda baca dan karakter non-alfabet
+        $text = preg_replace('/[^a-z\s]/', ' ', $text);
+
+        // Tokenisasi
+        $tokens = array_filter(explode(' ', $text), fn($w) => strlen(trim($w)) > 1);
+
+        // Hapus stopwords
+        $tokens = array_filter($tokens, fn($w) => !in_array($w, $this->stopwords));
+
+        // Stemming sederhana
+        $tokens = array_map(fn($w) => $this->stem($w), $tokens);
+
+        // Hapus token kosong
+        $tokens = array_values(array_filter($tokens, fn($w) => strlen($w) > 1));
+
+        return implode(' ', $tokens);
     }
 
-    private function searchPasal($query, $topK = 3)
+    /**
+     * Stemming sederhana bahasa Indonesia
+     * Hapus prefix: me, di, ter, ber, pe, ke, se
+     * Hapus suffix: kan, an, i
+     */
+    private function stem($word)
     {
-        $queryNormalized = $this->normalizeText($query);
-        $queryWords = array_unique(explode(' ', $queryNormalized));
-        $results = [];
+        $prefixes = ['menge', 'mempe', 'mem', 'men', 'meny', 'me', 'diper', 'di',
+                     'ter', 'ber', 'per', 'pe', 'ke', 'se'];
+        $suffixes = ['kan', 'an', 'i'];
 
-        foreach ($this->kuhpData as $row) {
-            $score = 0;
-
-            $keywords = $this->normalizeText($row['kata_kunci']);
-            $keywordList = array_map('trim', explode(',', $keywords));
-            foreach ($keywordList as $kw) {
-                $kwWords = array_unique(explode(' ', $kw));
-                if (count(array_intersect($kwWords, $queryWords)) > 0) {
-                    $score += 3;
-                }
-                if (strpos($queryNormalized, $kw) !== false) {
-                    $score += 5;
-                }
-            }
-
-            $judul = $this->normalizeText($row['judul']);
-            foreach ($queryWords as $word) {
-                if (strpos($judul, $word) !== false && strlen($word) > 3) {
-                    $score += 2;
-                }
-            }
-
-            $isi = $this->normalizeText($row['isi_pasal']);
-            foreach ($queryWords as $word) {
-                if (strpos($isi, $word) !== false && strlen($word) > 4) {
-                    $score += 1;
-                }
-            }
-
-            $kategori = $this->normalizeText($row['kategori']);
-            foreach ($queryWords as $word) {
-                if (strlen($word) > 3 && strpos($kategori, $word) !== false) {
-                    $score += 2;
-                }
-            }
-
-            if ($score > 0) {
-                $results[] = array_merge($row, ['score' => $score]);
+        // Hapus suffix
+        foreach ($suffixes as $suffix) {
+            if (substr($word, -strlen($suffix)) === $suffix && strlen($word) > strlen($suffix) + 3) {
+                $word = substr($word, 0, -strlen($suffix));
+                break;
             }
         }
 
-        usort($results, function($a, $b) {
-            return $b['score'] <=> $a['score'];
-        });
+        // Hapus prefix
+        foreach ($prefixes as $prefix) {
+            if (strpos($word, $prefix) === 0 && strlen($word) > strlen($prefix) + 3) {
+                $word = substr($word, strlen($prefix));
+                break;
+            }
+        }
 
-        return array_slice($results, 0, $topK);
+        return $word;
+    }
+
+    /**
+     * STEP 2 - TF-IDF
+     * TF  = jumlah kemunculan term / total term dalam dokumen
+     * IDF = log(total dokumen / jumlah dokumen yang mengandung term)
+     * TF-IDF = TF x IDF
+     */
+    private function buildTFIDF(array $corpus)
+    {
+        $totalDocs = count($corpus);
+        $tfMatrix  = [];
+        $df        = []; // document frequency per term
+
+        // Hitung TF untuk setiap dokumen
+        foreach ($corpus as $docIdx => $doc) {
+            $terms = explode(' ', $doc);
+            $termCount = count($terms);
+
+            if ($termCount === 0) {
+                $tfMatrix[$docIdx] = [];
+                continue;
+            }
+
+            $freq = array_count_values($terms);
+            $tf   = [];
+            foreach ($freq as $term => $count) {
+                if (strlen($term) < 2) continue;
+                $tf[$term] = $count / $termCount;
+
+                // Hitung document frequency
+                if (!isset($df[$term])) {
+                    $df[$term] = 0;
+                }
+                $df[$term]++;
+            }
+            $tfMatrix[$docIdx] = $tf;
+        }
+
+        // Hitung TF-IDF
+        $tfidfMatrix = [];
+        foreach ($tfMatrix as $docIdx => $tf) {
+            $tfidf = [];
+            foreach ($tf as $term => $tfVal) {
+                $idf = log($totalDocs / ($df[$term] + 1)) + 1;
+                $tfidf[$term] = $tfVal * $idf;
+            }
+            $tfidfMatrix[$docIdx] = $tfidf;
+        }
+
+        return $tfidfMatrix;
+    }
+
+    /**
+     * STEP 3 - COSINE SIMILARITY
+     * similarity = (A · B) / (|A| x |B|)
+     * A · B = dot product (jumlah hasil kali nilai yang sama)
+     * |A|   = magnitude vektor A (akar dari jumlah kuadrat)
+     */
+    private function cosineSimilarity(array $vecA, array $vecB)
+    {
+        if (empty($vecA) || empty($vecB)) {
+            return 0.0;
+        }
+
+        // Dot product
+        $dotProduct = 0.0;
+        foreach ($vecA as $term => $valA) {
+            if (isset($vecB[$term])) {
+                $dotProduct += $valA * $vecB[$term];
+            }
+        }
+
+        // Magnitude vektor A
+        $magnitudeA = sqrt(array_sum(array_map(fn($v) => $v * $v, $vecA)));
+
+        // Magnitude vektor B
+        $magnitudeB = sqrt(array_sum(array_map(fn($v) => $v * $v, $vecB)));
+
+        if ($magnitudeA == 0 || $magnitudeB == 0) {
+            return 0.0;
+        }
+
+        return $dotProduct / ($magnitudeA * $magnitudeB);
     }
 }

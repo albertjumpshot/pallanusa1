@@ -6,6 +6,7 @@ use App\Models\Article;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class AdminArticleController extends Controller
 {
@@ -23,7 +24,9 @@ class AdminArticleController extends Controller
      */
     public function create()
     {
-        return view('admin.articles.create');
+        return view('admin.articles.create', [
+            'categories' => $this->categories(),
+        ]);
     }
 
     /**
@@ -35,10 +38,16 @@ class AdminArticleController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'category' => 'required|string|max:100',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'url' => 'nullable|url',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
         $validated['published_at'] = now();
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('articles', 'public');
+        }
 
         Article::create($validated);
 
@@ -51,7 +60,10 @@ class AdminArticleController extends Controller
      */
     public function edit(Article $article)
     {
-        return view('admin.articles.edit', compact('article'));
+        return view('admin.articles.edit', [
+            'article' => $article,
+            'categories' => $this->categories(),
+        ]);
     }
 
     /**
@@ -63,9 +75,18 @@ class AdminArticleController extends Controller
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'category' => 'required|string|max:100',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'url' => 'nullable|url',
         ]);
 
         $validated['slug'] = Str::slug($validated['title']);
+
+        if ($request->hasFile('image')) {
+            if ($article->image) {
+                Storage::disk('public')->delete($article->image);
+            }
+            $validated['image'] = $request->file('image')->store('articles', 'public');
+        }
 
         $article->update($validated);
 
@@ -78,8 +99,25 @@ class AdminArticleController extends Controller
      */
     public function destroy(Article $article)
     {
+        if ($article->image) {
+            Storage::disk('public')->delete($article->image);
+        }
         $article->delete();
         return redirect()->route('admin.articles.index')
             ->with('success', 'Artikel berhasil dihapus.');
+    }
+
+    protected function categories(): array
+    {
+        return [
+            'Hukum Bisnis',
+            'Hukum Keluarga',
+            'Hukum Ketenagakerjaan',
+            'Hukum Konsumen',
+            'Hukum Perdata',
+            'Hukum Pidana',
+            'Hukum Properti',
+            'Lainnya',
+        ];
     }
 }

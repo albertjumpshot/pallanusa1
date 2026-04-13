@@ -59,10 +59,10 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 @php
                     $services = [
-                        ['icon' => '⚖️', 'title' => 'Hukum Perdata', 'desc' => 'Kasus perdata sipil dan transaksi komersial'],
-                        ['icon' => '🔨', 'title' => 'Hukum Pidana', 'desc' => 'Pertahanan dan penuntutan dalam perkara pidana'],
-                        ['icon' => '💼', 'title' => 'Hukum Bisnis', 'desc' => 'Konsultasi bisnis dan corporate governance'],
-                        ['icon' => '👨‍👩‍👧‍👦', 'title' => 'Hukum Keluarga', 'desc' => 'Perceraian, warisan, dan hukum keluarga'],
+                        ['icon' => '', 'title' => 'Hukum Perdata', 'desc' => 'Kasus perdata sipil dan transaksi komersial'],
+                        ['icon' => '', 'title' => 'Hukum Pidana', 'desc' => 'Pertahanan dan penuntutan dalam perkara pidana'],
+                        ['icon' => '', 'title' => 'Hukum Bisnis', 'desc' => 'Konsultasi bisnis dan corporate governance'],
+                        ['icon' => '', 'title' => 'Hukum Keluarga', 'desc' => 'Perceraian, warisan, dan hukum keluarga'],
                     ]
                 @endphp
                 @foreach($services as $service)
@@ -79,16 +79,8 @@
         </div>
     </section>
 
-    <!-- Call to Action Section -->
-    <section class="bg-dark text-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-4xl font-serif font-bold mb-6">Butuh Bantuan Hukum?</h2>
-            <p class="text-xl text-gray-300 mb-8">Hubungi kami sekarang untuk konsultasi gratis dan dapatkan solusi hukum terbaik untuk kasus Anda</p>
-            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-                <a href="{{ route('contact') }}" class="bg-gold text-dark px-8 py-3 rounded-lg font-semibold hover:bg-yellow-500 transition duration-300">Hubungi Kami</a>
-                <a href="{{ route('chatbot') }}" class="border-2 border-gold text-gold px-8 py-3 rounded-lg font-semibold hover:bg-gold hover:text-dark transition duration-300">AI Legal Assistant</a>
-                <a href="tel:+6212134567890" class="border-2 border-gold text-gold px-8 py-3 rounded-lg font-semibold hover:bg-gold hover:text-dark transition duration-300">+62 (21) 123-45678</a>
-            </div>
-        </div>
-    </section>
+    <!-- Call to Action -->
+    @include('components.cta')
+
+
 </x-app-layout>

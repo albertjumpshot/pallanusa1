@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminArticleController;
 use App\Http\Controllers\Admin\AdminLawyerController;
 use App\Http\Controllers\Admin\AdminServiceController;
+use App\Http\Controllers\Admin\AdminContactController;
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -48,5 +49,8 @@ Route::prefix('admin')->group(function () {
         Route::resource('articles', AdminArticleController::class, ['as' => 'admin']);
         Route::resource('lawyers', AdminLawyerController::class, ['as' => 'admin']);
         Route::resource('services', AdminServiceController::class, ['as' => 'admin']);
+        Route::get('contacts', [AdminContactController::class, 'index'])->name('admin.contacts.index');
+        Route::get('contacts/{id}', [AdminContactController::class, 'show'])->name('admin.contacts.show');
+        Route::delete('contacts/{id}', [AdminContactController::class, 'destroy'])->name('admin.contacts.destroy');
     });
 });

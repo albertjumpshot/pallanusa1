@@ -6,7 +6,7 @@
 @section('content')
     <div class="max-w-2xl mx-auto">
         <div class="bg-white rounded-lg shadow-md p-8">
-            <form action="{{ route('admin.articles.store') }}" method="POST" class="space-y-6">
+            <form action="{{ route('admin.articles.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
 
                 <div>
@@ -18,9 +18,28 @@
 
                 <div>
                     <label for="category" class="block text-sm font-semibold text-dark mb-2">Kategori *</label>
-                    <input type="text" id="category" name="category" value="{{ old('category') }}" required
+                    <select id="category" name="category" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold focus:ring-opacity-20">
+                        <option value="" disabled {{ old('category') ? '' : 'selected' }}>Pilih kategori artikel</option>
+                        @foreach($categories as $categoryOption)
+                            <option value="{{ $categoryOption }}" {{ old('category') === $categoryOption ? 'selected' : '' }}>{{ $categoryOption }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div>
+                    <label for="image" class="block text-sm font-semibold text-dark mb-2">Gambar Artikel</label>
+                    <input type="file" id="image" name="image" accept="image/*"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold focus:ring-opacity-20">
+                    <p class="text-gray-500 text-sm mt-1">Format: JPEG, PNG, JPG, GIF. Maksimal 2MB</p>
+                </div>
+
+                <div>
+                    <label for="url" class="block text-sm font-semibold text-dark mb-2">URL Sumber Artikel</label>
+                    <input type="url" id="url" name="url" value="{{ old('url') }}"
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold focus:ring-opacity-20"
-                           placeholder="Contoh: Hukum Bisnis, Hukum Keluarga, dll">
+                           placeholder="https://contoh.com/artikel">
+                    <p class="text-gray-500 text-sm mt-1">Link sumber artikel (opsional)</p>
                 </div>
 
                 <div>

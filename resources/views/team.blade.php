@@ -16,9 +16,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach($lawyers as $lawyer)
                     <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
-                        <div class="h-64 bg-gradient-to-br from-gold to-yellow-400 opacity-30 flex items-center justify-center">
-                            <span class="text-6xl">👨‍⚖️</span>
-                        </div>
+                        @if($lawyer->photo)
+                            <img src="{{ asset('storage/' . $lawyer->photo) }}" alt="{{ $lawyer->name }}" class="w-full h-64 object-cover">
+                        @else
+                            <div class="h-64 bg-gradient-to-br from-gold to-yellow-400 opacity-30 flex items-center justify-center">
+                                <span class="text-6xl">👨‍⚖️</span>
+                            </div>
+                        @endif
                         <div class="p-6">
                             <h3 class="text-xl font-serif font-bold text-dark mb-2">{{ $lawyer->name }}</h3>
                             <p class="text-gold font-semibold text-sm mb-4">{{ $lawyer->specialization }}</p>
@@ -33,7 +37,7 @@
                                 <p class="text-gray-600 text-sm">{{ Str::limit($lawyer->experience, 100) }}</p>
                             </div>
 
-                            <a href="mailto:info@pallanusa.com" class="bg-gold text-dark px-4 py-2 rounded font-semibold hover:bg-yellow-500 transition duration-300 text-sm inline-block">
+                            <a href=\"mailto:{{ config('contact.email.primary') }}\" class=\"bg-gold text-dark px-4 py-2 rounded font-semibold hover:bg-yellow-500 transition duration-300 text-sm inline-block\">
                                 Hubungi
                             </a>
                         </div>
@@ -107,7 +111,7 @@
                                 <p class="text-gray-600 text-sm">{{ $lawyer['experience'] }}</p>
                             </div>
 
-                            <a href="mailto:info@pallanusa.com" class="bg-gold text-dark px-4 py-2 rounded font-semibold hover:bg-yellow-500 transition duration-300 text-sm inline-block">
+                            <a href=\"mailto:{{ config('contact.email.primary') }}\" class=\"bg-gold text-dark px-4 py-2 rounded font-semibold hover:bg-yellow-500 transition duration-300 text-sm inline-block\">
                                 Hubungi
                             </a>
                         </div>
@@ -119,26 +123,26 @@
     </section>
 
     <!-- Statistics Section -->
-    <section class="bg-dark text-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-                <div>
-                    <div class="text-5xl font-bold text-gold mb-2">50+</div>
-                    <p class="text-gray-300">Profesional Hukum</p>
-                </div>
-                <div>
-                    <div class="text-5xl font-bold text-gold mb-2">20+</div>
-                    <p class="text-gray-300">Tahun Pengalaman</p>
-                </div>
-                <div>
-                    <div class="text-5xl font-bold text-gold mb-2">3000+</div>
-                    <p class="text-gray-300">Kasus Ditangani</p>
-                </div>
-                <div>
-                    <div class="text-5xl font-bold text-gold mb-2">95%</div>
-                    <p class="text-gray-300">Tingkat Kepuasan</p>
-                </div>
+    <section class="bg-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+            <div>
+                <div class="text-5xl font-bold text-gold mb-2">50+</div>
+                <p class="text-gray-600">Profesional Hukum</p>
+            </div>
+            <div>
+                <div class="text-5xl font-bold text-gold mb-2">20+</div>
+                <p class="text-gray-600">Tahun Pengalaman</p>
+            </div>
+            <div>
+                <div class="text-5xl font-bold text-gold mb-2">3000+</div>
+                <p class="text-gray-600">Kasus Ditangani</p>
+            </div>
+            <div>
+                <div class="text-5xl font-bold text-gold mb-2">95%</div>
+                <p class="text-gray-600">Tingkat Kepuasan</p>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 </x-app-layout>

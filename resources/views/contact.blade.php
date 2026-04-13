@@ -17,20 +17,19 @@
                 <div>
                     <div class="mb-8">
                         <h3 class="text-xl font-serif font-bold text-dark mb-3">📍 Lokasi Kantor</h3>
-                        <p class="text-gray-600">Jl. Sudirman No. 123<br>Jakarta Pusat 12190<br>Indonesia</p>
+                        <p class="text-gray-600">{{ config('contact.address.street') }}<br>{{ config('contact.address.city') }} {{ config('contact.address.postal_code') }}<br>{{ config('contact.address.country') }}</p>
                     </div>
                     <div class="mb-8">
                         <h3 class="text-xl font-serif font-bold text-dark mb-3">📞 Telepon</h3>
                         <p class="text-gray-600">
-                            <a href="tel:+6212134567890" class="text-gold hover:text-yellow-500">+62 (21) 1234-5678</a><br>
-                            <a href="tel:+6212187654321" class="text-gold hover:text-yellow-500">+62 (21) 8765-4321</a>
+                            <a href="tel:{{ config('contact.phone.primary') }}" class="text-gold hover:text-yellow-500">{{ config('contact.phone.formatted') }}</a>
                         </p>
                     </div>
                     <div class="mb-8">
                         <h3 class="text-xl font-serif font-bold text-dark mb-3">✉️ Email</h3>
                         <p class="text-gray-600">
-                            <a href="mailto:info@pallanusa.com" class="text-gold hover:text-yellow-500">info@pallanusa.com</a><br>
-                            <a href="mailto:konsultasi@pallanusa.com" class="text-gold hover:text-yellow-500">konsultasi@pallanusa.com</a>
+                            <a href="mailto:{{ config('contact.email.primary') }}" class="text-gold hover:text-yellow-500">{{ config('contact.email.primary') }}</a><br>
+                            <a href="mailto:{{ config('contact.email.secondary') }}" class="text-gold hover:text-yellow-500">{{ config('contact.email.secondary') }}</a>
                         </p>
                     </div>
                 </div>
@@ -68,6 +67,12 @@
                             <div>
                                 <label for="email" class="block text-sm font-semibold text-dark mb-2">Email *</label>
                                 <input type="email" id="email" name="email" value="{{ old('email') }}" required class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-gold" placeholder="Masukkan email Anda">
+                            </div>
+
+                            <div>
+                                <label for="phone" class="block text-sm font-semibold text-dark mb-2">Nomor Telepon</label>
+                                <input type="tel" id="phone" name="phone" value="{{ old('phone') }}" class="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-gold" placeholder="Contoh: 08123456789">
+                                <p class="text-gray-500 text-xs mt-1">Opsional, untuk memudahkan kami menghubungi Anda</p>
                             </div>
 
                             <div>
@@ -120,7 +125,7 @@
             <div class="mt-16">
                 <h3 class="text-2xl font-serif font-bold text-dark mb-6">Lokasi Kami</h3>
                 <div class="w-full h-96 bg-gray-200 rounded-lg overflow-hidden shadow-lg">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.2660346433515!2d106.8227081!3d-6.218385!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f5c6d5d5d5d5%3A0x5d5d5d5d5d5d5d5d!2sJakarta%20Pusat!5e0!3m2!1sen!2sid!4v0000000000" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.0162181505157!2d104.00566717581707!3d1.1489025621870483!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31d98900651a11b5%3A0xa2f138d86bb68010!2sKantor%20Hukum%20Pallanusa%20Darmasastra!5e0!3m2!1sid!2sid!4v1775905824470!5m2!1sid!2sid" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                 </div>
             </div>
         </div>

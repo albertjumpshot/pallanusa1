@@ -6,7 +6,7 @@
 @section('content')
     <div class="max-w-2xl mx-auto">
         <div class="bg-white rounded-lg shadow-md p-8">
-            <form action="{{ route('admin.lawyers.store') }}" method="POST" class="space-y-6">
+            <form action="{{ route('admin.lawyers.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
 
                 <div>
@@ -38,10 +38,10 @@
                 </div>
 
                 <div>
-                    <label for="photo" class="block text-sm font-semibold text-dark mb-2">URL Foto (Opsional)</label>
-                    <input type="text" id="photo" name="photo" value="{{ old('photo') }}"
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold focus:ring-opacity-20"
-                           placeholder="https://...">
+                    <label for="photo" class="block text-sm font-semibold text-dark mb-2">Foto Pengacara</label>
+                    <input type="file" id="photo" name="photo" accept="image/*"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold focus:ring-opacity-20">
+                    <p class="text-gray-500 text-sm mt-1">Format: JPEG, PNG, JPG, GIF. Maksimal 2MB</p>
                 </div>
 
                 <div class="flex space-x-3 pt-4">

@@ -16,9 +16,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach($articles as $article)
                     <article class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition duration-300">
-                        <div class="h-48 bg-gradient-to-br from-gold to-yellow-400 opacity-20 flex items-center justify-center">
-                            <span class="text-5xl">📰</span>
-                        </div>
+                        @if($article->image)
+                            <img src="{{ asset('storage/' . $article->image) }}" alt="{{ $article->title }}" class="w-full h-48 object-cover">
+                        @else
+                            <div class="h-48 bg-gradient-to-br from-gold to-yellow-400 opacity-20 flex items-center justify-center">
+                                <span class="text-5xl">📰</span>
+                            </div>
+                        @endif
                         <div class="p-6">
                             <div class="flex items-center mb-3">
                                 <span class="bg-gold text-dark px-3 py-1 rounded text-xs font-semibold">{{ $article->category ?? 'Hukum' }}</span>
@@ -26,9 +30,17 @@
                             </div>
                             <h3 class="text-xl font-serif font-bold text-dark mb-3">{{ $article->title }}</h3>
                             <p class="text-gray-600 text-sm mb-4">{{ Str::limit($article->content, 120) }}</p>
-                            <a href="{{ route('blog.show', $article) }}" class="text-gold font-semibold hover:text-yellow-500 transition duration-300">
-                                Baca Selengkapnya →
-                            </a>
+                            <div class="space-y-3">
+                                <a href="{{ route('blog.show', $article) }}" class="text-gold font-semibold hover:text-yellow-500 transition duration-300">
+                                    Baca Selengkapnya →
+                                </a>
+                                @if($article->url)
+                                    <br>
+                                    <a href="{{ $article->url }}" target="_blank" rel="noopener noreferrer" class="text-sm text-blue-600 hover:text-blue-800 transition duration-300">
+                                        🔗 Lihat Sumber Artikel
+                                    </a>
+                                @endif
+                            </div>
                         </div>
                     </article>
                     @endforeach
