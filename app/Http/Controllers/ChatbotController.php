@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\ChatbotLog;
 
 class ChatbotController extends Controller
 {
@@ -262,6 +263,13 @@ class ChatbotController extends Controller
                 'similarity_score' => round($similarity * 100, 2)
             ]);
         }
+
+        ChatbotLog::create([
+            'query' => $query,
+            'response' => $results,
+            'result_count' => count($results),
+            'top_result' => $results[0]['judul'] ?? null,
+        ]);
 
         return response()->json([
             'results' => $results,

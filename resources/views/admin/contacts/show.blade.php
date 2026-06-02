@@ -72,9 +72,6 @@
 
         <!-- Actions -->
         <div class="flex gap-4 pt-4 border-t border-gray-200">
-            <a href="mailto:{{ $contact->email }}" class="inline-flex items-center px-6 py-2 bg-gold text-dark rounded hover:bg-yellow-500 transition font-semibold">
-                Balas Pesan
-            </a>
             <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pesan ini?')">
                 @csrf
                 @method('DELETE')

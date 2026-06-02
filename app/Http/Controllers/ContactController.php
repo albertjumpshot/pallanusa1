@@ -24,6 +24,6 @@ class ContactController extends Controller
 
         Contact::create($validated);
 
-        return back()->with('success', 'Terima kasih atas pesan Anda. Kami akan menghubungi Anda segera.');
+        return redirect()->route('contact')->with('success', 'Terima kasih atas pesan Anda. Kami akan menghubungi Anda segera.');
     }
 }

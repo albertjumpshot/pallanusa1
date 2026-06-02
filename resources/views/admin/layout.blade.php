@@ -56,6 +56,10 @@
                    class="block px-4 py-3 rounded {{ request()->routeIs('admin.contacts.*') ? 'bg-gold text-dark font-semibold' : 'text-gray-300 hover:bg-gray-800' }} transition">
                     Pesan Kontak
                 </a>
+                <a href="{{ route('admin.chatbot_logs.index') }}" 
+                   class="block px-4 py-3 rounded {{ request()->routeIs('admin.chatbot_logs.*') ? 'bg-gold text-dark font-semibold' : 'text-gray-300 hover:bg-gray-800' }} transition">
+                    Riwayat Chatbot
+                </a>
             </nav>
 
             <!-- User Info & Logout -->

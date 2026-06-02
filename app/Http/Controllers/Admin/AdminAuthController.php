@@ -53,6 +53,6 @@ class AdminAuthController extends Controller
     {
         Auth::logout();
         session()->flush();
-        return redirect('/')->with('success', 'Anda berhasil logout.');
+        return redirect()->route('admin.login')->with('success', 'Anda berhasil logout.');
     }
 }

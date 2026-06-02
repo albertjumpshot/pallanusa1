@@ -44,32 +44,22 @@
             <!-- Related Articles -->
             <div class="mt-12">
                 <h3 class="text-2xl font-serif font-bold text-dark mb-6">Artikel Terkait</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    @php
-                        $relatedArticles = [
-                            [
-                                'title' => 'Memahami Hak-Hak Konsumen Indonesia',
-                                'category' => 'Hukum Konsumen',
-                                'excerpt' => 'Perlindungan konsumen adalah aspek penting dari sistem hukum yang adil...'
-                            ],
-                            [
-                                'title' => 'Langkah-Langkah Pendirian Perusahaan PT',
-                                'category' => 'Hukum Bisnis',
-                                'excerpt' => 'Panduan lengkap mendirikan PT yang sah menurut hukum Indonesia...'
-                            ],
-                        ]
-                    @endphp
-                    @foreach($relatedArticles as $related)
-                    <div class="bg-gray-50 p-6 rounded-lg hover:shadow-lg transition duration-300">
-                        <span class="bg-gold text-dark px-3 py-1 rounded text-xs font-semibold">{{ $related['category'] }}</span>
-                        <h4 class="text-lg font-serif font-bold text-dark mt-3 mb-2">{{ $related['title'] }}</h4>
-                        <p class="text-gray-600 text-sm mb-3">{{ $related['excerpt'] }}</p>
-                        <a href="{{ route('blog') }}" class="text-gold font-semibold text-sm hover:text-yellow-500 transition duration-300">
-                            Baca →
-                        </a>
+                @if($relatedArticles->isEmpty())
+                    <p class="text-gray-600">Tidak ada artikel terkait untuk kategori ini.</p>
+                @else
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        @foreach($relatedArticles as $related)
+                        <div class="bg-gray-50 p-6 rounded-lg hover:shadow-lg transition duration-300">
+                            <span class="bg-gold text-dark px-3 py-1 rounded text-xs font-semibold">{{ $related->category ?? 'Hukum' }}</span>
+                            <h4 class="text-lg font-serif font-bold text-dark mt-3 mb-2">{{ $related->title }}</h4>
+                            <p class="text-gray-600 text-sm mb-3">{{ Str::limit($related->content, 100) }}</p>
+                            <a href="{{ route('blog.show', $related) }}" class="text-gold font-semibold text-sm hover:text-yellow-500 transition duration-300">
+                                Baca →
+                            </a>
+                        </div>
+                        @endforeach
                     </div>
-                    @endforeach
-                </div>
+                @endif
             </div>
         </div>
     </section>

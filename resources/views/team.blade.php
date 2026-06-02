@@ -121,28 +121,4 @@
             @endif
         </div>
     </section>
-
-    <!-- Statistics Section -->
-    <section class="bg-white py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
-            <div>
-                <div class="text-5xl font-bold text-gold mb-2">50+</div>
-                <p class="text-gray-600">Profesional Hukum</p>
-            </div>
-            <div>
-                <div class="text-5xl font-bold text-gold mb-2">20+</div>
-                <p class="text-gray-600">Tahun Pengalaman</p>
-            </div>
-            <div>
-                <div class="text-5xl font-bold text-gold mb-2">3000+</div>
-                <p class="text-gray-600">Kasus Ditangani</p>
-            </div>
-            <div>
-                <div class="text-5xl font-bold text-gold mb-2">95%</div>
-                <p class="text-gray-600">Tingkat Kepuasan</p>
-            </div>
-        </div>
-    </div>
-</section>
 </x-app-layout>

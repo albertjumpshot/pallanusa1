@@ -41,20 +41,13 @@
                         <td class="px-6 py-4 text-sm text-gray-600">
                             {{ $article->created_at->format('d M Y') }}
                         </td>
-                        <td class="px-6 py-4">
-                            <div class="flex space-x-2">
-                                <a href="{{ route('admin.articles.edit', $article) }}" class="text-blue-600 hover:text-blue-800 font-semibold">
-                                    Edit
-                                </a>
-                                <form action="{{ route('admin.articles.destroy', $article) }}" method="POST" class="inline"
-                                      onsubmit="return confirm('Yakin ingin menghapus artikel ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-800 font-semibold">
-                                        Hapus
-                                    </button>
-                                </form>
-                            </div>
+                        <td class="px-6 py-4 text-sm text-center space-x-2">
+                            <a href="{{ route('admin.articles.edit', $article) }}" class="inline-flex items-center px-3 py-1 bg-blue-500 text-white rounded text-sm font-semibold hover:bg-blue-600 transition">
+                                Edit
+                            </a>
+                            <button type="button" onclick="openDeleteModal('{{ route('admin.articles.destroy', $article) }}')" class="inline-flex items-center px-3 py-1 bg-red-500 text-white rounded text-sm font-semibold hover:bg-red-600 transition">
+                                Hapus
+                            </button>
                         </td>
                     </tr>
                     @endforeach
@@ -75,3 +68,44 @@
         @endif
     </div>
 @endsection
+
+<!-- Delete Modal -->
+<div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full mx-4">
+        <h3 class="text-lg font-bold text-dark mb-4">Konfirmasi Hapus</h3>
+        <p class="text-gray-600 mb-6">Apakah Anda yakin ingin menghapus artikel ini? Tindakan ini tidak dapat dibatalkan.</p>
+        <div class="flex gap-4 justify-end">
+            <button type="button" onclick="closeDeleteModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded font-semibold hover:bg-gray-400 transition h-10">
+                Batal
+            </button>
+            <form id="deleteForm" method="POST" class="inline-block">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="px-4 py-2 bg-red-600 text-white rounded font-semibold hover:bg-red-700 transition h-10">
+                    Hapus
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openDeleteModal(actionUrl) {
+        const modal = document.getElementById('deleteModal');
+        const form = document.getElementById('deleteForm');
+        form.action = actionUrl;
+        modal.classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+        const modal = document.getElementById('deleteModal');
+        modal.classList.add('hidden');
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('deleteModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeDeleteModal();
+        }
+    });
+</script>

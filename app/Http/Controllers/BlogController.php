@@ -17,6 +17,13 @@ class BlogController extends Controller
 
     public function show(Article $article)
     {
-        return view('blog-show', compact('article'));
+        $relatedArticles = Article::where('category', $article->category)
+            ->where('id', '!=', $article->id)
+            ->whereNotNull('published_at')
+            ->orderByDesc('published_at')
+            ->limit(2)
+            ->get();
+
+        return view('blog-show', compact('article', 'relatedArticles'));
     }
 }
