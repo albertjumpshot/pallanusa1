@@ -1,4 +1,3 @@
-# Pallanusa Darmasastra Law Firm - Laravel Website
 
 Website
  profesional untuk firma hukum **Pallanusa Darmasastra Law Firm** yang dibangun dengan Laravel Fullstack Framework.
